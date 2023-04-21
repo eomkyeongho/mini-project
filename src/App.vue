@@ -15,33 +15,37 @@
       <v-main>
         <v-card 
         v-if="detail == true"
-        class="ma-10"
+        class="ma-10 pb-5"
         color="blue-grey-lighten-5"
         >
         <v-btn
         class="ma-2"
         color="red-darken-4"
+        max-width="30"
         @click="detail=false"
-        >
-          X
-        </v-btn>
-        <div class="mt-5 ml-5">
+        >X</v-btn>
+        <div class="mt-5 ml-5 mb-2">
           제목
         </div>
         <v-card
-        class="ml-5 mr-5 mb-5"
+        class="mx-5 mb-5 pa-2"
         >
-          {{ detailPost.title }}
+           {{ detailPost.title }}
         </v-card>
-        <div class="ml-5">
+        <div class="ml-5 mb-2">
           내용
         </div>
         <v-card
-        class="ml-5 mr-5 mb-5"
+        class="mx-5 mb-5 pa-2"
         >
-          {{ detailPost.content }}
+           {{ detailPost.content }}
         </v-card>
-          
+        <div class="ml-5 mb-2">
+          댓글
+        </div>
+        <v-card class="mx-5 my-2 pa-1" v-for="comment in comments[detailPost.id]" :key=comment>
+          {{ comment.writer }} | {{ comment.content }}
+        </v-card>
         </v-card>
         <v-btn class="mt-8 ml-8 bg-blue-darken-1">
   새글 작성
@@ -141,7 +145,11 @@ export default {
     {id : 4, title : "6:50에 밥드실분!", content : "6:40까지 로비로 오세요!", food : "korean", time : "6:50", place : "XX한식집"},
     {id : 5, title : "6:50에 밥드실분!", content : "6:40까지 로비로 오세요!", food : "japanese", time : "6:50", place : "XX일식집"},
     {id : 6, title : "7:00에 밥드실분!", content : "7:00까지 로비로 오세요!", food : "japanese", time : "7:00", place : "XX일식집"}
-   ]
+   ],
+   comments : { 1 : [{ writer : "연수생1", content : "저요!"}, { writer : "연수생2", content : "저도요!"}, { writer : "연수생7", content : "저도 먹고 싶어요!"}], 
+    2 : [{ writer : "연수생3", content : "저요!"}, { writer : "연수생4", content : "저도요!"}], 
+    3 : [{ writer : "연수생5", content : "저요!"}, { writer : "연수생6", content : "저도요!"}], 
+  }
   }),
   methods : {
     
