@@ -14,6 +14,31 @@
 
       <v-main>
         <v-card 
+        v-if="create == true"
+        class="ma-10 pb-5"
+        color="blue-grey-lighten-5"
+         >
+        <v-btn
+        class="ma-2"
+        color="red-darken-4"
+        max-width="30"
+        @click="create=false"
+        >X</v-btn>
+        <v-text-field label="제목" v-model="inputTitle" class="ma-10"></v-text-field>
+        <v-text-field label="내용" v-model="inputContext" class="ma-10"></v-text-field>
+        <v-text-field label="장소" v-model="inputPlace" class="ma-10"></v-text-field>
+        <v-text-field label="시간" v-model="inputTime" class="ma-10"></v-text-field>
+        <v-select
+        class="ma-10"
+        label="음식 종류"
+        :items="['korean', 'japanese', 'chinese']"
+        v-model="inputFood"
+        ></v-select>
+        <v-container class="text-center">
+          <v-btn @click="post()">완료</v-btn>
+        </v-container>
+      </v-card>
+        <v-card 
         v-if="detail == true"
         class="ma-10 pb-5"
         color="blue-grey-lighten-5"
@@ -40,14 +65,20 @@
         >
            {{ detailPost.content }}
         </v-card>
+        <hr class="my-7">
         <div class="ml-5 mb-2">
           댓글
         </div>
         <v-card class="mx-5 my-2 pa-1" v-for="comment in comments[detailPost.id]" :key=comment>
           {{ comment.writer }} | {{ comment.content }}
         </v-card>
+        <v-text-field label="댓글" v-model="inputComment" class="mx-10 mt-7"></v-text-field>
+        <v-text-field label="작성자" v-model="inputWriter" class="mx-10"></v-text-field>
+        <v-container class="text-center">
+          <v-btn @click="comment()">완료</v-btn>
+        </v-container>
         </v-card>
-        <v-btn class="mt-8 ml-8 bg-blue-darken-1">
+        <v-btn class="mt-8 ml-8 bg-blue-darken-1" @click="detail=false;create=true">
   새글 작성
 </v-btn>
         <v-container class="blue-lighten-3 mb-6">
@@ -61,7 +92,7 @@
         color="grey-lighten-4"
         max-width="250"
         v-bind="props"
-        @click = "detail = true;detailPost = post"
+        @click = "detail = true;create=false;detailPost = post"
       >
         <v-img v-if="post.food == 'korean'"
           :aspect-ratio="20/9"
@@ -137,7 +168,15 @@ export default {
   },
 
   data: () => ({
+    inputTitle : '',
+    inputContext : '',
+    inputTime : '',
+    inputFood : '',
+    inputPlace : '',
+    inputComment : '',
+    inputWriter : '',
     detail : false,
+    create : false,
     detailPost : null,
     posts : [{id : 1, title : "6:30에 밥드실분!", content : "6:20까지 라운지로 오세요!", food : "korean", time : "6:30", place : "XX한식집"},
     {id : 2, title : "7:20에 밥드실분!", content : "7:10까지 씨앗방2로 오세요!", food : "japanese", time : "7:20", place : "XX일식집"},
@@ -152,7 +191,30 @@ export default {
   }
   }),
   methods : {
-    
+    post() {
+      if (this.inputTitle == '' || this.inputContext == '' || this.inputFood == '' || this.inputTime == '' || this.inputPlace == '') {
+        return;
+      }
+
+      this.posts.push({id : this.posts.length + 1, title : this.inputTitle, content : this.inputContext, food : this.inputFood, time : this.inputTime, place : this.inputPlace})
+      this.inputTitle = '';
+      this.inputContext = '';
+      this.inputFood = '';
+      this.inputTime = '';
+      this.inputPlace = '';
+      this.create = false;
+    },
+    comment() {
+      if(this.inputComment == '' || this.inputWriter == '') {
+        return;
+      }
+
+      if (this.comments[this.detailPost.id] == null) {
+        this.comments[this.detailPost.id] = [];
+      }
+      this.comments[this.detailPost.id].push({writer : this.inputWriter, content : this.inputComment})
+      this.inputComment = '';
+    }
   }
 }
 </script>
